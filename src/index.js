@@ -1,18 +1,6 @@
 import "./pages/index.css";
-import {
-  initialCards,
-  createCard,
-  deleteCard,
-  handleLike,
-} from "./components/cards.js";
-import {
-  openModalEdit,
-  openModalNewCard,
-  openImageModal,
-  closeModal,
-  closeModalOverlay,
-  closeModalEsc,
-} from "./components/modal.js";
+import { initialCards, createCard,  deleteCard } from "./components/cards.js";
+import { openModal, closeModal, closeModalOverlay, closeByEscape } from "./components/modal.js";
 
 // DOM узлы
 const places = document.querySelector(".places__list");
@@ -22,70 +10,78 @@ const modalImage = document.querySelector(".popup_type_image");
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
 const profileName = modalEdit.querySelector(".popup__input_type_name");
-const descriptionInput = modalEdit.querySelector(
-  ".popup__input_type_description"
-);
+const descriptionInput = modalEdit.querySelector(".popup__input_type_description");
 const popupImage = modalImage.querySelector(".popup__image");
 const popupCaption = modalImage.querySelector(".popup__caption");
 
 // Вывести карточки на страницу
 initialCards.forEach(function (cardData) {
   places.append(
-    createCard(cardData, deleteCard, handleLike, (img) =>
-      openImageModal(modalImage, img, popupImage, popupCaption, closeModalEsc)
-    )
+    createCard(cardData, deleteCard, handleLike, (img) => {
+      openModal(modalImage); 
+      openImageModal(modalImage, img, popupImage, popupCaption, closeByEscape);
+    })
   );
 });
+
+// Функция обработки лайка
+function handleLike(likeButton) {
+  likeButton.classList.toggle("card__like-button_is-active");
+}
 
 // Открытие и закрытие модального окна
 
+// Закрытие окон по крестику и оверлею
+const popups = document.querySelectorAll('.popup')
+
+popups.forEach((popup) => {
+    popup.addEventListener('mousedown', (evt) => {
+        if (evt.target.classList.contains('popup_is-opened')) {
+            closeModal(popup)
+        }
+        if (evt.target.classList.contains('popup__close')) {
+          closeModal(popup)
+        };
+        document.removeEventListener('keydown', closeByEscape);
+    })
+})
+
 // Модальное окно Edit
-const modalButtonEdit = document.querySelectorAll(".profile__edit-button");
-const closeModalButtonEdit = modalEdit.querySelector(".popup__close");
+const modalButtonEdit = document.querySelector(".profile__edit-button");
 
-modalButtonEdit.forEach((button) => {
-  button.addEventListener("click", () =>
-    openModalEdit(
-      modalEdit,
-      profileTitle,
-      profileDescription,
-      profileName,
-      descriptionInput,
-      closeModalEsc
-    )
-  );
+function openModalEdit(modalEdit, profileTitle,  profileDescription, profileName, descriptionInput) {
+  profileName.value = profileTitle.textContent;
+  descriptionInput.value = profileDescription.textContent;
+  modalEdit.classList.add("popup_is-animated");
+  document.addEventListener('keydown', closeByEscape);
+}
+
+modalButtonEdit.addEventListener("click", () => {
+  openModal(modalEdit);  
+  openModalEdit(modalEdit, profileTitle, profileDescription, profileName, descriptionInput);
 });
-
-closeModalButtonEdit.addEventListener("click", () =>
-  closeModal(modalEdit, closeModalEsc)
-);
-modalEdit.addEventListener("click", (evt) =>
-  closeModalOverlay(evt, () => closeModal(modalEdit, closeModalEsc))
-);
 
 // Модальное окно NewCard
 const modalButtonAdd = document.querySelector(".profile__add-button");
-const closeModalButtonNewCard = modalNewCard.querySelector(".popup__close");
 
-modalButtonAdd.addEventListener("click", () =>
-  openModalNewCard(modalNewCard, closeModalEsc)
-);
-closeModalButtonNewCard.addEventListener("click", () =>
-  closeModal(modalNewCard, closeModalEsc)
-);
-modalNewCard.addEventListener("click", (evt) =>
-  closeModalOverlay(evt, () => closeModal(modalNewCard, closeModalEsc))
-);
+function openModalNewCard(modalNewCard) {
+  modalNewCard.classList.add("popup_is-animated");
+  document.addEventListener('keydown', closeByEscape);
+}
+
+modalButtonAdd.addEventListener("click", () => {
+  openModal(modalNewCard); 
+  openModalNewCard(modalNewCard); 
+});
 
 // Модальное окно Image
-const closeModalButtonImage = modalImage.querySelector(".popup__close");
-
-closeModalButtonImage.addEventListener("click", () =>
-  closeModal(modalImage, closeModalEsc)
-);
-modalImage.addEventListener("click", (evt) =>
-  closeModalOverlay(evt, () => closeModal(modalImage, closeModalEsc))
-);
+function openImageModal(modalImage, imageElement, popupImage, popupCaption) {
+  popupImage.src = imageElement.src;
+  popupImage.alt = imageElement.alt;
+  popupCaption.textContent = imageElement.alt;
+  modalImage.classList.add("popup_is-animated");
+  document.addEventListener('keydown', closeByEscape);
+}
 
 // Редактирование профиля
 
@@ -97,7 +93,7 @@ function handleFormSubmit(evt) {
   const jobValue = descriptionInput.value;
   profileTitle.textContent = nameValue;
   profileDescription.textContent = jobValue;
-  closeModal(modalEdit, closeModalEsc);
+  closeModal(modalEdit, closeByEscape);
 }
 
 formElement.addEventListener("submit", handleFormSubmit);
@@ -116,7 +112,7 @@ function handleNewPlaceSubmit(evt) {
   const placeName = newPlace.elements["place-name"].value;
   const placeLink = newPlace.elements["link"].value;
   createNewCard(placeName, placeLink);
-  closeModal(modalNewCard, closeModalEsc);
+  closeModal(modalNewCard, closeByEscape);
   newPlace.reset();
 }
 

@@ -1,8 +1,15 @@
+// Функция открывания модального окна
+
+function openModal(popup) {
+  setTimeout(() => {
+    popup.classList.add('popup_is-opened');
+  }, 10);
+}
+
 // Функции закрытия модального окна
 
-function closeModal(modal, closeModalEsc) {
-  modal.classList.remove("popup_is-opened");
-  document.removeEventListener("keydown", closeModalEsc);
+function closeModal(popup) {
+  popup.classList.remove("popup_is-opened");
 }
 
 function closeModalOverlay(evt, closeModal) {
@@ -11,70 +18,13 @@ function closeModalOverlay(evt, closeModal) {
   }
 }
 
-function closeModalEsc(evt, closeModal) {
-  if (evt.key === "Escape") {
-    const openedModal = document.querySelector(".popup_is-opened");
-    if (openedModal) {
-      closeModal(openedModal);
+function closeByEscape(evt) {
+  if (evt.key === 'Escape') {
+    const openedPopup = document.querySelector('.popup_is-opened');    
+    if (openedPopup) {
+      closeModal(openedPopup);
     }
   }
 }
 
-// Функции открывания модального окна
-
-function openModalEdit(
-  modalEdit,
-  profileTitle,
-  profileDescription,
-  profileName,
-  descriptionInput,
-  closeModalEsc
-) {
-  profileName.value = profileTitle.textContent;
-  descriptionInput.value = profileDescription.textContent;
-  modalEdit.classList.add("popup_is-animated");
-  setTimeout(() => {
-    modalEdit.classList.add("popup_is-opened");
-  }, 10);
-  document.addEventListener("keydown", (evt) =>
-    closeModalEsc(evt, () => closeModal(modalEdit, closeModalEsc))
-  );
-}
-
-function openModalNewCard(modalNewCard, closeModalEsc) {
-  modalNewCard.classList.add("popup_is-animated");
-  setTimeout(() => {
-    modalNewCard.classList.add("popup_is-opened");
-  }, 10);
-  document.addEventListener("keydown", (evt) =>
-    closeModalEsc(evt, () => closeModal(modalNewCard, closeModalEsc))
-  );
-}
-
-function openImageModal(
-  modalImage,
-  imageElement,
-  popupImage,
-  popupCaption,
-  closeModalEsc
-) {
-  popupImage.src = imageElement.src;
-  popupImage.alt = imageElement.alt;
-  popupCaption.textContent = imageElement.alt;
-  modalImage.classList.add("popup_is-animated");
-  setTimeout(() => {
-    modalImage.classList.add("popup_is-opened");
-  }, 10);
-  document.addEventListener("keydown", (evt) =>
-    closeModalEsc(evt, () => closeModal(modalImage, closeModalEsc))
-  );
-}
-
-export {
-  openModalEdit,
-  openModalNewCard,
-  openImageModal,
-  closeModal,
-  closeModalOverlay,
-  closeModalEsc,
-};
+export { openModal, closeModal, closeModalOverlay, closeByEscape };
