@@ -1,6 +1,6 @@
 import "./pages/index.css";
 import { initialCards, createCard,  deleteCard } from "./components/cards.js";
-import { openModal, closeModal, closeModalOverlay, closeByEscape } from "./components/modal.js";
+import { openModal, closeModal, closeByEscape } from "./components/modal.js";
 
 // DOM узлы
 const places = document.querySelector(".places__list");
@@ -42,7 +42,6 @@ popups.forEach((popup) => {
         if (evt.target.classList.contains('popup__close')) {
           closeModal(popup)
         };
-        document.removeEventListener('keydown', closeByEscape);
     })
 })
 
@@ -52,8 +51,6 @@ const modalButtonEdit = document.querySelector(".profile__edit-button");
 function openModalEdit(modalEdit, profileTitle,  profileDescription, profileName, descriptionInput) {
   profileName.value = profileTitle.textContent;
   descriptionInput.value = profileDescription.textContent;
-  modalEdit.classList.add("popup_is-animated");
-  document.addEventListener('keydown', closeByEscape);
 }
 
 modalButtonEdit.addEventListener("click", () => {
@@ -64,14 +61,8 @@ modalButtonEdit.addEventListener("click", () => {
 // Модальное окно NewCard
 const modalButtonAdd = document.querySelector(".profile__add-button");
 
-function openModalNewCard(modalNewCard) {
-  modalNewCard.classList.add("popup_is-animated");
-  document.addEventListener('keydown', closeByEscape);
-}
-
 modalButtonAdd.addEventListener("click", () => {
   openModal(modalNewCard); 
-  openModalNewCard(modalNewCard); 
 });
 
 // Модальное окно Image
@@ -79,15 +70,13 @@ function openImageModal(modalImage, imageElement, popupImage, popupCaption) {
   popupImage.src = imageElement.src;
   popupImage.alt = imageElement.alt;
   popupCaption.textContent = imageElement.alt;
-  modalImage.classList.add("popup_is-animated");
-  document.addEventListener('keydown', closeByEscape);
 }
 
 // Редактирование профиля
 
 const formElement = modalEdit.querySelector(".popup__form");
 
-function handleFormSubmit(evt) {
+function  handleProfileFormSubmit(evt) {
   evt.preventDefault();
   const nameValue = profileName.value;
   const jobValue = descriptionInput.value;
@@ -96,7 +85,7 @@ function handleFormSubmit(evt) {
   closeModal(modalEdit, closeByEscape);
 }
 
-formElement.addEventListener("submit", handleFormSubmit);
+formElement.addEventListener("submit", handleProfileFormSubmit);
 
 // Добавление карточки
 

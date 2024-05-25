@@ -4,19 +4,11 @@ function openModal(popup) {
   setTimeout(() => {
     popup.classList.add('popup_is-opened');
   }, 10);
+  document.addEventListener('keydown', closeByEscape);
+  popup.classList.add("popup_is-animated");
 }
 
 // Функции закрытия модального окна
-
-function closeModal(popup) {
-  popup.classList.remove("popup_is-opened");
-}
-
-function closeModalOverlay(evt, closeModal) {
-  if (evt.target === evt.currentTarget) {
-    closeModal(evt.currentTarget);
-  }
-}
 
 function closeByEscape(evt) {
   if (evt.key === 'Escape') {
@@ -27,4 +19,9 @@ function closeByEscape(evt) {
   }
 }
 
-export { openModal, closeModal, closeModalOverlay, closeByEscape };
+function closeModal(popup) {
+  popup.classList.remove("popup_is-opened");
+  document.removeEventListener('keydown', closeByEscape);
+}
+
+export { openModal, closeModal, closeByEscape };
