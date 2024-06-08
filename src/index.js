@@ -78,6 +78,13 @@ popups.forEach((popup) => {
   });
 });
 
+// Функция для изменения состояния кнопки Сохранить
+function setButtonState(form, isLoading, text) {
+  const button = form.querySelector(".popup__button");
+  button.textContent = text;
+  button.disabled = isLoading;
+}
+
 // Модальное окно Edit
 const modalButtonEdit = document.querySelector(".profile__edit-button");
 
@@ -141,9 +148,11 @@ function handleProfileFormSubmit(evt) {
       profileTitle.textContent = userData.name;
       profileDescription.textContent = userData.about;
       closeModal(modalEdit, closeByEscape);
+      setButtonState(form, false, "Сохранить");
     })
     .catch((err) => {
       console.log("Ошибка при обновлении профиля:", err);
+      setButtonState(form, false, "Сохранить"); 
     });
 }
 
@@ -189,37 +198,6 @@ newPlace.addEventListener("submit", handleNewPlaceSubmit);
 
 // Вызов функции проверки валидации
 enableValidation();
-
-// Функция для изменения состояния кнопки Сохранить
-function setButtonState(form, isLoading, text) {
-  const button = form.querySelector(".popup__button");
-  button.textContent = text;
-  button.disabled = isLoading;
-}
-
-// Функция для получения данных пользователя
-// function getUser() {
-//   return fetch("https://nomoreparties.co/v1/wff-cohort-14/users/me", {
-//     headers: {
-//       authorization: "8026ba24-3947-401b-ab48-c209fe9bf574",
-//     },
-//   })
-//     .then((res) => {
-//       return res.json();
-//     })
-//     .then((result) => {
-//       profileTitle.textContent = result.name;
-//       profileDescription.textContent = result.about;
-//       profileImage.style.backgroundImage = `url(${result.avatar})`;
-//       return result._id;
-//     })
-//     .catch((err) => {
-//       console.error(
-//         "Ошибка. Запрос на получение данных пользователя не выполнен:",
-//         err
-//       );
-//     });
-// }
 
 // Вызов Promise
 Promise.all([getUser(), getCards()])
