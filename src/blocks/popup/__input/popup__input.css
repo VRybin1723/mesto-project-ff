@@ -7,7 +7,8 @@
   line-height: 18px;
   box-sizing: border-box;
   padding: 10px 0 0;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
+  position: relative;
 }
 
 .popup__input:last-of-type {
@@ -19,4 +20,25 @@
     font-size: 12px;
     line-height: 15px;
   }
+}
+
+.popup__input_type_error {
+  border-bottom: 1px solid #FF0000;
+} 
+
+.popup__input-error {
+  font-size: 12px;
+  line-height: 1;
+  color: #FF0000;
+  position: absolute;
+  inset: 140px 36px auto;
+  visibility: hidden;
+}
+
+.popup__input-error:not(:first-of-type) {
+  inset: 216px 36px auto;
+}
+
+.popup__input-error_active {
+  visibility: visible;
 }
