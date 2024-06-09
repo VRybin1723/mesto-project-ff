@@ -54,7 +54,10 @@ function createCard(
   title.textContent = cardData.name;
   likeCount.textContent = cardData.likes ? cardData.likes.length : 0;
 
-  // Проверка пользователя владельца карточки
+  if (cardData.likes.some(element => element._id === userId)) {
+    card.querySelector('.card__like-button').classList.add("card__like-button_is-active");
+  }
+
   if (userId === cardData.owner._id) {
     deleteButton.style.display = "block";
   } else {
@@ -85,7 +88,8 @@ function createCard(
   });
 
   img.addEventListener("click", function () {
-    imageCallback(img);
+    imageCallback(cardData['name'], cardData['link']);
+    console.log('Было')
   });
 
   return card;
