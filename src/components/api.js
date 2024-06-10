@@ -10,10 +10,10 @@ const config = {
 
 // Функция для получения данных пользователя
 function getUser() {
-    return fetch(`${config.baseUrl}/users/me`, {
-      headers: config.headers,
-    }).then(checkResponse);
-  }
+  return fetch(`${config.baseUrl}/users/me`, {
+    headers: config.headers,
+  }).then(checkResponse);
+}
 
 // Функция для получения карточек
 function getCards() {
@@ -67,5 +67,21 @@ function updateAvatar(newAvatarUrl) {
   }).then(checkResponse);
 }
 
+// Функция обработки лайка
+function likeCard(cardId, isLiked) {
+return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+  method: isLiked ? "DELETE" : "PUT",
+  headers: config.headers,
+})
+  .then(checkResponse);
+}
+
 export { apiDeleteCard };
-export { getUser, getCards, updateUser, uploadNewCard, updateAvatar };
+export {
+  getUser,
+  getCards,
+  updateUser,
+  uploadNewCard,
+  updateAvatar,
+  likeCard
+};

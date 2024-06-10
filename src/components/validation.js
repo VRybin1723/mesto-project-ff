@@ -80,7 +80,8 @@ const setEventListeners = (formElement, settings) => {
         }
       });
       const buttonElement = formElement.querySelector(settings.submitButtonSelector);
-      toggleButtonState(inputList, buttonElement, settings);
+      buttonElement.disabled = true;
+      buttonElement.classList.add(settings.inactiveButtonClass);
   };
 
 export {

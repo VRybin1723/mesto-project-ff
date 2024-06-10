@@ -75,7 +75,6 @@ function createCard(
         })
         .catch((err) => {
           console.error(err);
-          closeModal(modalDelete);
         });
     };
   });
